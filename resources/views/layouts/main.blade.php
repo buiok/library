@@ -15,7 +15,9 @@
 </head>
 <body>
 
-@include('inc.messages')
+@if(session('success'))
+    @include('inc.messages')
+@endif
 
 <div class="main-wrapper">
     <div class="content">

@@ -166,8 +166,9 @@ return [
     */
 
     'attributes' => [
-        'name'                  => 'ФИО',
-        'login'                  => 'Логин',
+        'name'                  => 'Название',
+        'type'                  => 'Тип',
+        'login'                 => 'Логин',
         'username'              => 'Никнейм',
         'email'                 => 'E-Mail адрес',
         'first_name'            => 'Имя',

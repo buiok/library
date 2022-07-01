@@ -9,10 +9,10 @@
        <div class="collapse navbar-collapse" id="navbarNav">
            <ul class="navbar-nav">
                <li class="nav-item">
-                   <a class="nav-link active" aria-current="page" href="#">Материалы</a>
+                   <a class="nav-link active" aria-current="page" href="{{ route('materials.index') }}">Материалы</a>
                </li>
                <li class="nav-item">
-                   <a class="nav-link" href="#">Теги</a>
+                   <a class="nav-link" href="{{ route('tags.index') }}">Теги</a>
                </li>
                <li class="nav-item">
                    <a class="nav-link" href="#">Категории</a>

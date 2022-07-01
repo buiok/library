@@ -6,6 +6,7 @@ use App\Models\Material;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\Category;
+use App\Models\Tag_Material;
 
 class MaterialController extends Controller
 {
@@ -27,7 +28,8 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        return view('material.create');
+        $categories = Category::all();
+        return view('material.create', compact('categories'));
     }
 
     /**
@@ -38,7 +40,17 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required|string',
+            'category_id' => 'required|integer|exists:categories,id',
+            'type' => 'required',
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        Material::create($request->all());
+
+        return redirect()->route('materials.index')->with('success', 'Материал успешно добавлен');
     }
 
     /**
@@ -49,7 +61,9 @@ class MaterialController extends Controller
      */
     public function show(Material $material)
     {
-        $tags = Tag::all();
+        $tagsM = Tag_Material::select('name')->join('tags', 'tag_id' , '=', 'tags.id')->where('material_id', $material->id)->get();
+        $tags = Tag::whereNotIn('name', $tagsM)->get();
+
         return view('material.show', compact('material'), compact('tags'));
     }
 
@@ -75,10 +89,8 @@ class MaterialController extends Controller
     public function update(Request $request, Material $material)
     {
         $rules = [
-            'name' => 'required',
+            'name' => 'required|string',
             'category_id' => 'required|integer|exists:categories,id',
-            'description' => 'string|required|min:3',
-            'author' => 'required',
             'type' => 'required',
         ];
 
@@ -100,5 +112,17 @@ class MaterialController extends Controller
         $material->delete();
 
         return redirect()->route('materials.index')->with('success', 'Материал удален');
+    }
+
+    public function AddTagMaterial(Request $request)
+    {
+        $validatedData = $request->validate([ 'tag_id' => 'required' ]);
+
+        Tag_Material::create([
+            'tag_id' => $request->tag_id,
+            'material_id' => $request->material_id,
+        ]);
+
+        return redirect()->route('materials.index')->with('success', 'Тег добавлен');
     }
 }

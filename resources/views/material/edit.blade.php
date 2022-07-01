@@ -8,15 +8,7 @@
 <div class="container">
     <h1 class="my-md-5 my-4">Изменить материал</h1>
 
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+     @include('inc.messages')
 
     <div class="row">
         <div class="col-lg-5 col-md-8">
@@ -41,20 +33,6 @@
                 </div>
                 <div class="form-floating mb-3">
                     <select class="form-select" id="floatingSelectCategory" name="category_id" required> 
-                       <!-- <option selected>Выберите категорию</option>
-                        <option value="0">Деловые/Бизнес-процессы</option>
-                        <option value="1">Деловые/Найм</option>
-                        <option value="2">Деловые/Реклама</option>
-                        <option value="3">Деловые/Управление бизнесом</option>
-                        <option value="4">Деловые/Управление людьми</option>
-                        <option value="5">Деловые/Управление проектами</option>
-                        <option value="6">Детские/Воспитание</option>
-                        <option value="7">Дизайн/Общее</option>
-                        <option value="8">Дизайн/Logo</option>
-                        <option value="9">Дизайн/Web дизайн</option>
-                        <option value="10">Разработка/PHP</option>
-                        <option value="11">Разработка/HTML и CSS</option>
-                        <option value="12">Разработка/Проектирование</option> -->
 
                         @foreach($categories as $category)
                             @if($category->id == $material->category_id)
@@ -78,7 +56,7 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ $material->author }}" name="author" required>
+                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ $material->author }}" name="author">
                     <label for="floatingAuthor">Авторы</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
@@ -86,7 +64,7 @@
                 </div>
                 <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Напишите краткое описание" id="floatingDescription"
-                      style="height: 100px" name="description" required>{{ $material->description }}</textarea>
+                      style="height: 100px" name="description">{{ $material->description }}</textarea>
                     <label for="floatingDescription">Описание</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле

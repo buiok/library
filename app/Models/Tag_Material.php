@@ -9,5 +9,5 @@ class Tag_Material extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    
+    public $table = "tag_material";
 }

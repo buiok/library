@@ -18,3 +18,6 @@ Route::get('/', function () {
 });
 
 Route::resource('materials', 'App\Http\Controllers\MaterialController');
+Route::post('materials/addtags', 'App\Http\Controllers\MaterialController@AddTagMaterial')->name('addTagMaterial');
+
+Route::resource('tags', 'App\Http\Controllers\TagController')->except('show');
