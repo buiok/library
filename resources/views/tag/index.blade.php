@@ -17,9 +17,9 @@
 
                     @foreach($tags as $tag)
                     <li class="list-group-item list-group-item-action d-flex justify-content-between">
-                        <span href="#" class="me-3">
+                        <a href="{{ route('tags.show', $tag->id) }}" class="me-3">
                             {{ $tag->name }}
-                        </span>
+                        </a>
                         <span class="text-nowrap">
                         <a href="{{ route('tags.edit', $tag->id) }}" class="text-decoration-none me-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

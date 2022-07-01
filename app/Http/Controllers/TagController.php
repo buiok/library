@@ -44,6 +44,19 @@ class TagController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Material  $material
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Tag $tag)
+    {
+        $materials = $tag->materials;
+
+        return view('tag.show', compact('materials'), compact('tag'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Tag  $tag

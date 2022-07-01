@@ -125,4 +125,11 @@ class MaterialController extends Controller
 
         return redirect()->route('materials.index')->with('success', 'Тег добавлен');
     }
+
+    public function DeleteTagMaterial(Request $request)
+    {
+        $tag = Tag_Material::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
+
+        return redirect()->route('materials.index')->with('success', 'Тег удален');
+    }
 }

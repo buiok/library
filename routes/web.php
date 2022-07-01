@@ -19,5 +19,7 @@ Route::get('/', function () {
 
 Route::resource('materials', 'App\Http\Controllers\MaterialController');
 Route::post('materials/addtags', 'App\Http\Controllers\MaterialController@AddTagMaterial')->name('addTagMaterial');
+Route::post('materials/deletetags', 'App\Http\Controllers\MaterialController@DeleteTagMaterial')->name('deleteTagMaterial');
 
-Route::resource('tags', 'App\Http\Controllers\TagController')->except('show');
+Route::resource('tags', 'App\Http\Controllers\TagController');
+
