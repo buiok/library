@@ -7,9 +7,9 @@
 
     <!-- Bootstrap CSS -->
 
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-utilities.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="{{url('css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url('css/bootstrap-utilities.css')}}">
+    <link rel="stylesheet" href="{{url('css/style.css')}}">
 
     <title> @yield('title') </title>
 </head>

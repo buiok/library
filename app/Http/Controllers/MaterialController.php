@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Category;
 
 class MaterialController extends Controller
 {
@@ -60,7 +61,8 @@ class MaterialController extends Controller
      */
     public function edit(Material $material)
     {
-        return view('material.edit');
+        $categories = Category::all();
+        return view('material.edit', compact('material'), compact('categories'));
     }
 
     /**
@@ -72,7 +74,9 @@ class MaterialController extends Controller
      */
     public function update(Request $request, Material $material)
     {
-        //
+        $material->update($request->all());
+
+        return redirect()->route('materials.index');
     }
 
     /**
