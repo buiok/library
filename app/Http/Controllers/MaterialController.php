@@ -97,6 +97,8 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        //
+        $material->delete();
+
+        return redirect()->route('materials.index')->with('success', 'Материал удален');
     }
 }
