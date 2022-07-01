@@ -74,9 +74,19 @@ class MaterialController extends Controller
      */
     public function update(Request $request, Material $material)
     {
+        $rules = [
+            'name' => 'required',
+            'category_id' => 'required|integer|exists:categories,id',
+            'description' => 'string|required|min:3',
+            'author' => 'required',
+            'type' => 'required',
+        ];
+
+        $validatedData = $request->validate($rules);
+
         $material->update($request->all());
 
-        return redirect()->route('materials.index');
+        return redirect()->route('materials.index')->with('success', 'Материал успешно изменен');
     }
 
     /**

@@ -14,6 +14,9 @@
     <title> @yield('title') </title>
 </head>
 <body>
+
+@include('inc.messages')
+
 <div class="main-wrapper">
     <div class="content">
         @include('inc.menu')

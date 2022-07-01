@@ -7,13 +7,25 @@
 @section('content')
 <div class="container">
     <h1 class="my-md-5 my-4">Изменить материал</h1>
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-lg-5 col-md-8">
+
             <form method="POST" action=" {{ route('materials.update', $material->id) }} ">
             @csrf
             @method('PUT')
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelectType" name="type">
+                    <select class="form-select" id="floatingSelectType" name="type" required>
                         <option value="{{ $material->type }}" selected>{{ $material->type }}</option>
                         <option value="Книга">Книга</option>
                         <option value="Статья">Статья</option>
@@ -28,7 +40,7 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelectCategory" name="category_id">
+                    <select class="form-select" id="floatingSelectCategory" name="category_id" required> 
                        <!-- <option selected>Выберите категорию</option>
                         <option value="0">Деловые/Бизнес-процессы</option>
                         <option value="1">Деловые/Найм</option>
@@ -59,14 +71,14 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" value="{{ $material->name }}" name="name">
+                    <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" value="{{ $material->name }}" name="name" required>
                     <label for="floatingName">Название</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ $material->author }}" name="author">
+                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ $material->author }}" name="author" required>
                     <label for="floatingAuthor">Авторы</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
@@ -74,7 +86,7 @@
                 </div>
                 <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Напишите краткое описание" id="floatingDescription"
-                      style="height: 100px" name="description">{{ $material->description }}</textarea>
+                      style="height: 100px" name="description" required>{{ $material->description }}</textarea>
                     <label for="floatingDescription">Описание</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
