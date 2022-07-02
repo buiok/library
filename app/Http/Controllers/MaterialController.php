@@ -28,7 +28,7 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get();
         return view('material.create', compact('categories'));
     }
 
@@ -62,7 +62,7 @@ class MaterialController extends Controller
     public function show(Material $material)
     {
         $tagsM = Tag_Material::select('name')->join('tags', 'tag_id' , '=', 'tags.id')->where('material_id', $material->id)->get();
-        $tags = Tag::whereNotIn('name', $tagsM)->get();
+        $tags = Tag::whereNotIn('name', $tagsM)->orderBy('name')->get();
 
         return view('material.show', compact('material'), compact('tags'));
     }
@@ -75,7 +75,7 @@ class MaterialController extends Controller
      */
     public function edit(Material $material)
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get();
         return view('material.edit', compact('material'), compact('categories'));
     }
 

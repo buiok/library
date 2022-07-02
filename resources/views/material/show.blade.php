@@ -23,7 +23,7 @@
             </div>
             <div class="d-flex text-break">
                 <p class="col fw-bold mw-25 mw-sm-30 me-2">Категория</p>
-                <p class="col">{{$material->category->name}}</p>
+                <a class="col" href="{{ route('categories.show', $material->category->id) }}">{{$material->category->name}}</a>
             </div>
 
             @if($material->description != NULL)

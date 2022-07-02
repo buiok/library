@@ -23,3 +23,4 @@ Route::post('materials/deletetags', 'App\Http\Controllers\MaterialController@Del
 
 Route::resource('tags', 'App\Http\Controllers\TagController');
 
+Route::resource('categories', 'App\Http\Controllers\CategoryController');

@@ -15,7 +15,7 @@
                    <a class="nav-link" href="{{ route('tags.index') }}">Теги</a>
                </li>
                <li class="nav-item">
-                   <a class="nav-link" href="#">Категории</a>
+                   <a class="nav-link" href="{{ route('categories.index') }}">Категории</a>
                </li>
            </ul>
        </div>

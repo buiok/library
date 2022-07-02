@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::orderBy('name')->get();
-        return view('tag.index', compact('tags'));
+        $categories = Category::orderBy('name')->get();
+        return view('category.index', compact('categories'));
     }
 
     /**
@@ -25,7 +25,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        return view('tag.create');
+        return view('category.create');
     }
 
     /**
@@ -38,61 +38,61 @@ class TagController extends Controller
     {
         $validatedData = $request->validate(['name' => 'required']);
 
-        Tag::create($request->all());
+        Category::create($request->all());
 
-        return redirect()->route('tags.index')->with('success', 'Тег добавлен');
+        return redirect()->route('categories.index')->with('success', 'Категория добавлена');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Material  $material
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show(Category $category)
     {
-        $materials = $tag->materials;
+        $materials = $category->materials;
 
-        return view('tag.show', compact('materials'), compact('tag'));
+        return view('category.show', compact('materials'), compact('category'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tag $tag)
+    public function edit(Category $category)
     {
-        return view('tag.edit', compact('tag'));
+        return view('category.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Request $request, Category $category)
     {
         $validatedData = $request->validate(['name' => 'required']);
 
-        $tag->update($request->all());
+        $category->update($request->all());
 
-        return redirect()->route('tags.index')->with('success', 'Тег изменен');
+        return redirect()->route('categories.index')->with('success', 'Категория изменена');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy(Category $category)
     {
-        $tag->delete();
+        $category->delete();
 
-        return redirect()->route('tags.index')->with('success', 'Тег удален');
+        return redirect()->route('categories.index')->with('success', 'Категория удалена');
     }
 }
