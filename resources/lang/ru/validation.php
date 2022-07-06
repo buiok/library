@@ -168,6 +168,9 @@ return [
     'attributes' => [
         'name'                  => 'Название',
         'type'                  => 'Тип',
+        'tag'                   => 'Тег',
+        'url'                   => 'Ссылка',
+        'signature'             => 'Подпись',
         'login'                 => 'Логин',
         'username'              => 'Никнейм',
         'email'                 => 'E-Mail адрес',

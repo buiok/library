@@ -20,5 +20,10 @@ class Material extends Model
     {
         return $this->belongsToMany(Tag::class, 'tag_material'); 
     }
+
+    public function links()
+    {
+        return $this->hasMany(Link::class);
+    }
 }
 

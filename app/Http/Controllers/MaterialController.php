@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Tag;
+use App\Models\Link;
 use App\Models\Category;
 use App\Models\Tag_Material;
 
@@ -116,10 +118,16 @@ class MaterialController extends Controller
 
     public function AddTagMaterial(Request $request)
     {
-        $validatedData = $request->validate([ 'tag_id' => 'required' ]);
+        $validator = Validator:: make($request->all(), [
+           'tag' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_addTag');
+        }
 
         Tag_Material::create([
-            'tag_id' => $request->tag_id,
+            'tag_id' => $request->tag,
             'material_id' => $request->material_id,
         ]);
 
@@ -132,4 +140,46 @@ class MaterialController extends Controller
 
         return redirect()->route('materials.index')->with('success', 'Тег удален');
     }
+
+    public function AddLinkMaterial(Request $request)
+    {
+
+        $validator = Validator:: make($request->all(), [
+           'url' => 'required|url',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_addLink');
+        }
+
+        Link::create([
+            'material_id' => $request->material_id,
+            'signature' => $request->signature,
+            'url' => $request->url,
+        ]);
+
+        return redirect()->route('materials.index')->with('success', 'Ссылка добавлена');
+    }
+
+    public function EditLinkMaterial(Request $request)
+    {
+        $validator = Validator:: make($request->all(), [
+           'url' => 'required|url',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_editLink');
+        }
+
+        $link = Link::find($request->link_id);
+
+        $link->update([
+            'material_id' => $request->material_id,
+            'signature' => $request->signature,
+            'url' => $request->url,
+        ]);
+
+        return redirect()->route('materials.index')->with('success', 'Ссылка изменена');
+    }
+
 }
