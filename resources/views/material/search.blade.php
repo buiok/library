@@ -1,18 +1,17 @@
 @extends('layouts.main')
 
 @section('title')
-    Материалы
+    Поиск
 @endsection
 
 @section('content')
     <div class="container">
-        <h1 class="my-md-5 my-4">Материалы</h1>
-        <a class="btn btn-primary mb-4" href="{{ route('materials.create') }}" role="button">Добавить</a>
+        <h1 class="my-md-5 my-4">Поиск по материалам</h1>
         <div class="row">
             <div class="col-md-8">
                 <form action="{{ route('searchMaterial') }}">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" aria-label="Example text with button addon" aria-describedby="button-addon1" name="search">
+                        <input type="text" class="form-control" aria-label="Example text with button addon" aria-describedby="button-addon1" name="search" value='{{ $search }}'>
                         <button type="submit" class="btn btn-primary" id="button-addon1">Искать</button>
                     </div>
                 </form>

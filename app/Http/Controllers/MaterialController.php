@@ -116,6 +116,16 @@ class MaterialController extends Controller
         return redirect()->route('materials.index')->with('success', 'Материал удален');
     }
 
+    public function SearchMaterial(Request $request)
+    {
+
+        $search = $request->search;
+
+        $materials = Material::select('materials.*')->where('materials.name', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->orWhere('categories.name', 'LIKE', '%' . $search . '%')->orWhere('tags.name', 'LIKE', '%' . $search . '%')->leftJoin('categories', 'category_id', '=', 'categories.id')->leftJoin('tag_material', 'materials.id', '=', 'tag_material.material_id')->leftJoin('tags', 'tag_id', '=', 'tags.id')->distinct()->get();
+
+        return view('material.search', compact('materials'), compact('search'));
+    }
+
     public function AddTagMaterial(Request $request)
     {
         $validator = Validator:: make($request->all(), [
@@ -188,4 +198,6 @@ class MaterialController extends Controller
 
         return redirect()->route('materials.index')->with('success', 'Ссылка удалена');
     }
+
+    
 }
