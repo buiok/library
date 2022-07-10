@@ -8,7 +8,6 @@
     <div class="container">
         <h1 class="my-md-5 my-4">Изменить категорию</h1>
         @include('inc.messages')
-
         <div class="row">
             <div class="col-lg-5 col-md-8">
                 <form method="POST" action="{{ route('categories.update', $category) }}">

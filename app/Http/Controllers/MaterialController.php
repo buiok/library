@@ -49,10 +49,9 @@ class MaterialController extends Controller
         ];
 
         $validatedData = $request->validate($rules);
+        $material = Material::create($request->all());
 
-        Material::create($request->all());
-
-        return redirect()->route('materials.index')->with('success', 'Материал успешно добавлен');
+        return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно добавлен');
     }
 
     /**
@@ -63,10 +62,11 @@ class MaterialController extends Controller
      */
     public function show(Material $material)
     {
-        $tagsM = Tag_Material::select('name')->join('tags', 'tag_id' , '=', 'tags.id')->where('material_id', $material->id)->get();
-        $tags = Tag::whereNotIn('name', $tagsM)->orderBy('name')->get();
+        $tagsNotIn = Tag_Material::select('name')->join('tags', 'tag_id', '=', 'tags.id')
+            ->where('material_id', $material->id)->get();
+        $tags = Tag::whereNotIn('name', $tagsNotIn)->orderBy('name')->get();
 
-        return view('material.show', compact('material'), compact('tags'));
+        return view('material.show', compact('material', 'tags'));
     }
 
     /**
@@ -78,7 +78,7 @@ class MaterialController extends Controller
     public function edit(Material $material)
     {
         $categories = Category::orderBy('name')->get();
-        return view('material.edit', compact('material'), compact('categories'));
+        return view('material.edit', compact('material', 'categories'));
     }
 
     /**
@@ -97,10 +97,9 @@ class MaterialController extends Controller
         ];
 
         $validatedData = $request->validate($rules);
-
         $material->update($request->all());
 
-        return redirect()->route('materials.index')->with('success', 'Материал успешно изменен');
+        return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно изменен');
     }
 
     /**
@@ -112,21 +111,29 @@ class MaterialController extends Controller
     public function destroy(Material $material)
     {
         $material->delete();
-
         return redirect()->route('materials.index')->with('success', 'Материал удален');
     }
 
-    public function SearchMaterial(Request $request)
+    public function searchMaterial(Request $request)
     {
+        $validator = Validator:: make($request->all(), ['search' => 'required|string']);
+        if ($validator->fails()) {
+            return redirect()->route('materials.index')->withErrors($validator, 'form_search');
+        }
 
         $search = $request->search;
+        $materials = Material::select('materials.*')->where('materials.name', 'LIKE', '%' . $search . '%')
+            ->orWhere('author', 'LIKE', '%' . $search . '%')
+            ->orWhere('categories.name', 'LIKE', '%' . $search . '%')
+            ->orWhere('tags.name', 'LIKE', '%' . $search . '%')
+            ->leftJoin('categories', 'category_id', '=', 'categories.id')
+            ->leftJoin('tag_material', 'materials.id', '=', 'tag_material.material_id')
+            ->leftJoin('tags', 'tag_id', '=', 'tags.id')->distinct()->get();
 
-        $materials = Material::select('materials.*')->where('materials.name', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->orWhere('categories.name', 'LIKE', '%' . $search . '%')->orWhere('tags.name', 'LIKE', '%' . $search . '%')->leftJoin('categories', 'category_id', '=', 'categories.id')->leftJoin('tag_material', 'materials.id', '=', 'tag_material.material_id')->leftJoin('tags', 'tag_id', '=', 'tags.id')->distinct()->get();
-
-        return view('material.search', compact('materials'), compact('search'));
+        return view('material.search', compact('materials', 'search'));
     }
 
-    public function AddTagMaterial(Request $request)
+    public function addTagMaterial(Request $request)
     {
         $validator = Validator:: make($request->all(), [
            'tag' => 'required',
@@ -141,17 +148,16 @@ class MaterialController extends Controller
             'material_id' => $request->material_id,
         ]);
 
-        return redirect()->route('materials.index')->with('success', 'Тег добавлен');
+        return redirect()->route('materials.show', $request->material_id)->with('success', 'Тег добавлен');
     }
 
-    public function DeleteTagMaterial(Request $request)
+    public function deleteTagMaterial(Request $request)
     {
         $tag = Tag_Material::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
-
-        return redirect()->route('materials.index')->with('success', 'Тег удален');
+        return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
-    public function AddLinkMaterial(Request $request)
+    public function addLinkMaterial(Request $request)
     {
 
         $validator = Validator:: make($request->all(), [
@@ -168,10 +174,10 @@ class MaterialController extends Controller
             'url' => $request->url,
         ]);
 
-        return redirect()->route('materials.index')->with('success', 'Ссылка добавлена');
+        return redirect()->route('materials.show', $request->material_id)->with('success', 'Ссылка добавлена');
     }
 
-    public function EditLinkMaterial(Request $request)
+    public function editLinkMaterial(Request $request)
     {
         $validator = Validator:: make($request->all(), [
            'url' => 'required|url',
@@ -182,22 +188,18 @@ class MaterialController extends Controller
         }
 
         $link = Link::find($request->link_id);
-
         $link->update([
             'material_id' => $request->material_id,
             'signature' => $request->signature,
             'url' => $request->url,
         ]);
 
-        return redirect()->route('materials.index')->with('success', 'Ссылка изменена');
+        return redirect()->route('materials.show', $request->material_id)->with('success', 'Ссылка изменена');
     }
 
-    public function DeleteLinkMaterial(Request $request)
+    public function deleteLinkMaterial(Request $request)
     {
         $tag = Link::where('id', $request->link)->delete();
-
         return redirect()->route('materials.index')->with('success', 'Ссылка удалена');
     }
-
-    
 }

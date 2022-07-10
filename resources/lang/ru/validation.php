@@ -167,9 +167,11 @@ return [
 
     'attributes' => [
         'name'                  => 'Название',
+        'search'                => 'Поиск',
         'type'                  => 'Тип',
         'tag'                   => 'Тег',
         'url'                   => 'Ссылка',
+        'category'              => 'Категория',
         'signature'             => 'Подпись',
         'login'                 => 'Логин',
         'username'              => 'Никнейм',

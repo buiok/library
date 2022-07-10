@@ -8,11 +8,21 @@
     <div class="container">
         <h1 class="my-md-5 my-4">Материалы</h1>
         <a class="btn btn-primary mb-4" href="{{ route('materials.create') }}" role="button">Добавить</a>
+        @if($errors->form_search->all())
+            <div class="alert alert-danger">
+                <ul>
+                @foreach($errors->form_search->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-md-8">
                 <form action="{{ route('searchMaterial') }}">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" aria-label="Example text with button addon" aria-describedby="button-addon1" name="search">
+                        <input type="text" class="form-control" aria-label="Example text with button addon" aria-describedby="button-addon1" name="search" required>
                         <button type="submit" class="btn btn-primary" id="button-addon1">Искать</button>
                     </div>
                 </form>

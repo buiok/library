@@ -17,7 +17,10 @@
                 </form>
             </div>
         </div>
-        <div class="table-responsive">
+        @if(count($materials) == 0)
+            <p>По вашему запросу ничего не найдено</p>
+        @else
+            <div class="table-responsive">
             <table class="table">
                 <thead>
                 <tr>
@@ -59,7 +62,7 @@
                     </td>
                 </tr>
                 @endforeach
-
+            @endif
 
                 </tbody>
             </table>

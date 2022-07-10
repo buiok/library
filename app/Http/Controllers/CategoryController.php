@@ -36,7 +36,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate(['name' => 'required']);
+        $validatedData = $request->validate(['name' => 'required|unique:categories,name']);
 
         Category::create($request->all());
 
@@ -52,8 +52,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $materials = $category->materials;
-
-        return view('category.show', compact('materials'), compact('category'));
+        return view('category.show', compact('materials', 'category'));
     }
 
     /**
@@ -76,8 +75,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validatedData = $request->validate(['name' => 'required']);
-
+        $validatedData = $request->validate(['name' => 'required|unique:categories,name']);
         $category->update($request->all());
 
         return redirect()->route('categories.index')->with('success', 'Категория изменена');
@@ -92,7 +90,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-
         return redirect()->route('categories.index')->with('success', 'Категория удалена');
     }
 }

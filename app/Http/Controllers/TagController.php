@@ -36,8 +36,7 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate(['name' => 'required']);
-
+        $validatedData = $request->validate(['name' => 'required|unique:tags,name']);
         Tag::create($request->all());
 
         return redirect()->route('tags.index')->with('success', 'Тег добавлен');
@@ -52,8 +51,7 @@ class TagController extends Controller
     public function show(Tag $tag)
     {
         $materials = $tag->materials;
-
-        return view('tag.show', compact('materials'), compact('tag'));
+        return view('tag.show', compact('materials', 'tag'));
     }
 
     /**
@@ -76,8 +74,7 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        $validatedData = $request->validate(['name' => 'required']);
-
+        $validatedData = $request->validate(['name' => 'required|unique:tags,name']);
         $tag->update($request->all());
 
         return redirect()->route('tags.index')->with('success', 'Тег изменен');
@@ -92,7 +89,6 @@ class TagController extends Controller
     public function destroy(Tag $tag)
     {
         $tag->delete();
-
         return redirect()->route('tags.index')->with('success', 'Тег удален');
     }
 }

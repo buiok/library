@@ -103,6 +103,9 @@
             </div>
             <ul class="list-group mb-4">
 
+            @if(count($material->links)==0)
+                <p>Нет ссылок</p>
+            @else
                 @foreach($material->links as $link)
                     <li class="list-group-item list-group-item-action d-flex justify-content-between">
                         <a href="{{ $link->url }}" class="me-3" target="_blank" rel = "noopener noreferrer">
@@ -134,7 +137,7 @@
                     </span>
                     </li>
                 @endforeach
-
+            @endif
             </ul>
         </div>
     </div>
