@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $tag_id
- * @property integer $material_id
+ * @property int $id
+ * @property int $tag_id
+ * @property int $material_id
  */
 class TagMaterial extends Model
 {

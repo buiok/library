@@ -161,13 +161,12 @@ class MaterialController extends Controller
 
     public function deleteTagMaterial(Request $request): RedirectResponse
     {
-        $tag = TagMaterial::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
+        TagMaterial::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
         return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
     public function addLinkMaterial(Request $request): RedirectResponse
     {
-
         $validator = Validator:: make($request->all(), [
            'url' => 'required|url',
         ]);
@@ -207,7 +206,7 @@ class MaterialController extends Controller
 
     public function deleteLinkMaterial(Request $request): RedirectResponse
     {
-        $tag = Link::where('id', $request->link)->delete();
+        Link::where('id', $request->link)->delete();
         return redirect()->route('materials.index')->with('success', 'Ссылка удалена');
     }
 }

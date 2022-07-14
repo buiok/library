@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property Material[] $materials
  */
@@ -15,7 +15,6 @@ class Tag extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
 
     public function materials(): BelongsToMany
     {
