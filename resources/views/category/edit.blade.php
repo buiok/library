@@ -14,7 +14,7 @@
                 @csrf
                 @method('PUT')
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" name="name" required value='{{ $category->name }}'>
+                        <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" name="name" required value='{{ old("name", $category->name) }}'>
                         <label for="floatingName">Название</label>
                         <div class="invalid-feedback">
                             Пожалуйста, заполните поле

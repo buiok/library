@@ -18,7 +18,7 @@
             @method('PUT')
                 <div class="form-floating mb-3">
                     <select class="form-select" id="floatingSelectType" name="type" required>
-                        <option value="{{ $material->type }}" selected>{{ $material->type }}</option>
+                        <option value="{{ old('type', $material->type) }}" selected>{{ old('type', $material->type) }}</option>
                         <option value="Книга">Книга</option>
                         <option value="Статья">Статья</option>
                         <option value="Видео">Видео</option>
@@ -35,10 +35,18 @@
                     <select class="form-select" id="floatingSelectCategory" name="category_id" required> 
 
                         @foreach($categories as $category)
-                            @if($category->id == $material->category_id)
-                                <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+                            @if(old('category_id'))
+                                @if($category->id == old('category_id'))
+                                    <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+                                @else
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endif
                             @else
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @if($category->id == $material->category_id)
+                                    <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+                                @else
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endif
                             @endif
                         @endforeach
 
@@ -49,14 +57,14 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" value="{{ $material->name }}" name="name" required>
+                    <input type="text" class="form-control" placeholder="Напишите название" id="floatingName" value="{{ old('name', $material->name) }}" name="name" required>
                     <label for="floatingName">Название</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ $material->author }}" name="author">
+                    <input type="text" class="form-control" placeholder="Напишите авторов" id="floatingAuthor" value="{{ old('author', $material->author) }}" name="author">
                     <label for="floatingAuthor">Авторы</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
@@ -64,7 +72,7 @@
                 </div>
                 <div class="form-floating mb-3">
             <textarea class="form-control" placeholder="Напишите краткое описание" id="floatingDescription"
-                      style="height: 100px" name="description">{{ $material->description }}</textarea>
+                      style="height: 100px" name="description">{{ old('description', $material->description) }}</textarea>
                     <label for="floatingDescription">Описание</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
