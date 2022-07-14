@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +21,17 @@ Route::get('/', function () {
 });
 
 
-Route::get('materials/search', 'App\Http\Controllers\MaterialController@searchMaterial')->name('searchMaterial');
-Route::post('materials/addtags', 'App\Http\Controllers\MaterialController@addTagMaterial')->name('addTagMaterial');
-Route::post('materials/deletetags', 'App\Http\Controllers\MaterialController@deleteTagMaterial')->name('deleteTagMaterial');
+Route::get('materials/search', [MaterialController::class,'searchMaterial'])->name('searchMaterial');
+Route::post('materials/addtags', [MaterialController::class, 'addTagMaterial'])->name('addTagMaterial');
+Route::post('materials/deletetags', [MaterialController::class, 'deleteTagMaterial'])->name('deleteTagMaterial');
 
-Route::post('materials/addlinks', 'App\Http\Controllers\MaterialController@addLinkMaterial')->name('addLinkMaterial');
-Route::post('materials/editlinks', 'App\Http\Controllers\MaterialController@editLinkMaterial')->name('editLinkMaterial');
-Route::post('materials/deletelinks', 'App\Http\Controllers\MaterialController@deleteLinkMaterial')->name('deleteLinkMaterial');
+Route::post('materials/addlinks', [MaterialController::class, 'addLinkMaterial'])->name('addLinkMaterial');
+Route::post('materials/editlinks', [MaterialController::class, 'editLinkMaterial'])->name('editLinkMaterial');
+Route::post('materials/deletelinks', [MaterialController::class, 'deleteLinkMaterial'])->name('deleteLinkMaterial');
 
 
 Route::resources([
-    'materials' => 'App\Http\Controllers\MaterialController',
-    'tags' => 'App\Http\Controllers\TagController',
-    'categories' => 'App\Http\Controllers\CategoryController'
+    'materials' => MaterialController::class,
+    'tags' => TagController::class,
+    'categories' => CategoryController::class,
 ]);
