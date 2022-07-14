@@ -3,21 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Tag;
 use App\Models\Link;
 use App\Models\Category;
-use App\Models\Tag_Material;
+use App\Models\TagMaterial;
 
 class MaterialController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $materials = Material::all();
         return view('material.index', compact('materials'));
@@ -26,9 +30,9 @@ class MaterialController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $categories = Category::orderBy('name')->get();
         return view('material.create', compact('categories'));
@@ -37,10 +41,10 @@ class MaterialController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $rules = [
             'name' => 'required|string',
@@ -48,7 +52,7 @@ class MaterialController extends Controller
             'type' => 'required',
         ];
 
-        $validatedData = $request->validate($rules);
+        $request->validate($rules);
         $material = Material::create($request->all());
 
         return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно добавлен');
@@ -57,14 +61,18 @@ class MaterialController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Material  $material
-     * @return \Illuminate\Http\Response
+     * @param Material $material
+     * @return View
      */
-    public function show(Material $material)
+    public function show(Material $material): View
     {
-        $tagsNotIn = Tag_Material::select('name')->join('tags', 'tag_id', '=', 'tags.id')
-            ->where('material_id', $material->id)->get();
-        $tags = Tag::whereNotIn('name', $tagsNotIn)->orderBy('name')->get();
+        $result = Tag::select('tags.*')->leftJoin('tag_material', 'tags.id', '=', 'tag_id');
+
+        foreach ($material->tags as $tag) {
+            $result->where('tags.name' , '<>', $tag->name);
+        }
+
+        $tags = $result->distinct('name')->orderBy('name')->get();
 
         return view('material.show', compact('material', 'tags'));
     }
@@ -72,10 +80,10 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Material  $material
-     * @return \Illuminate\Http\Response
+     * @param Material $material
+     * @return Application|Factory|View
      */
-    public function edit(Material $material)
+    public function edit(Material $material): View|Factory|Application
     {
         $categories = Category::orderBy('name')->get();
         return view('material.edit', compact('material', 'categories'));
@@ -84,11 +92,11 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Material  $material
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Material $material
+     * @return RedirectResponse
      */
-    public function update(Request $request, Material $material)
+    public function update(Request $request, Material $material): RedirectResponse
     {
         $rules = [
             'name' => 'required|string',
@@ -96,7 +104,7 @@ class MaterialController extends Controller
             'type' => 'required',
         ];
 
-        $validatedData = $request->validate($rules);
+        $request->validate($rules);
         $material->update($request->all());
 
         return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно изменен');
@@ -105,16 +113,16 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Material  $material
-     * @return \Illuminate\Http\Response
+     * @param Material $material
+     * @return RedirectResponse
      */
-    public function destroy(Material $material)
+    public function destroy(Material $material): RedirectResponse
     {
         $material->delete();
         return redirect()->route('materials.index')->with('success', 'Материал удален');
     }
 
-    public function searchMaterial(Request $request)
+    public function searchMaterial(Request $request): Factory|View|RedirectResponse|Application
     {
         $validator = Validator:: make($request->all(), ['search' => 'required|string']);
         if ($validator->fails()) {
@@ -133,7 +141,7 @@ class MaterialController extends Controller
         return view('material.search', compact('materials', 'search'));
     }
 
-    public function addTagMaterial(Request $request)
+    public function addTagMaterial(Request $request): RedirectResponse
     {
         $validator = Validator:: make($request->all(), [
            'tag' => 'required',
@@ -143,7 +151,7 @@ class MaterialController extends Controller
             return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_addTag');
         }
 
-        Tag_Material::create([
+        TagMaterial::create([
             'tag_id' => $request->tag,
             'material_id' => $request->material_id,
         ]);
@@ -151,13 +159,13 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material_id)->with('success', 'Тег добавлен');
     }
 
-    public function deleteTagMaterial(Request $request)
+    public function deleteTagMaterial(Request $request): RedirectResponse
     {
-        $tag = Tag_Material::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
+        $tag = TagMaterial::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
         return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
-    public function addLinkMaterial(Request $request)
+    public function addLinkMaterial(Request $request): RedirectResponse
     {
 
         $validator = Validator:: make($request->all(), [
@@ -177,7 +185,7 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material_id)->with('success', 'Ссылка добавлена');
     }
 
-    public function editLinkMaterial(Request $request)
+    public function editLinkMaterial(Request $request): RedirectResponse
     {
         $validator = Validator:: make($request->all(), [
            'url' => 'required|url',
@@ -197,7 +205,7 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material_id)->with('success', 'Ссылка изменена');
     }
 
-    public function deleteLinkMaterial(Request $request)
+    public function deleteLinkMaterial(Request $request): RedirectResponse
     {
         $tag = Link::where('id', $request->link)->delete();
         return redirect()->route('materials.index')->with('success', 'Ссылка удалена');
