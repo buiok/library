@@ -18,7 +18,7 @@ class TagController extends Controller
      */
     public function index(): View
     {
-        $tags = Tag::orderBy('name')->get();
+        $tags = Tag::sorted();
         return view('tag.index', compact('tags'));
     }
 

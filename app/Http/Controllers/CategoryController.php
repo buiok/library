@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::sorted();
         return view('category.index', compact('categories'));
     }
 
@@ -41,7 +41,6 @@ class CategoryController extends Controller
         $request->validate(['name' => 'required|unique:categories,name']);
 
         Category::create($request->all());
-
         return redirect()->route('categories.index')->with('success', 'Категория добавлена');
     }
 

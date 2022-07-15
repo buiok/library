@@ -14,4 +14,10 @@ class TagMaterial extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $table = 'tag_material';
+
+    public function scopeSearchForDelete($query, $request)
+    {
+        return $query->where([['tag_id', $request->tag],['material_id', $request->material]]);
+    }
 }

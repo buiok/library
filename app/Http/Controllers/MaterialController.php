@@ -35,7 +35,7 @@ class MaterialController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::sorted();
         return view('material.create', compact('categories'));
     }
 
@@ -67,14 +67,7 @@ class MaterialController extends Controller
      */
     public function show(Material $material): View
     {
-        $result = Tag::select('tags.*')->leftJoin('tag_material', 'tags.id', '=', 'tag_id');
-
-        foreach ($material->tags as $tag) {
-            $result->where('tags.name' , '<>', $tag->name);
-        }
-
-        $tags = $result->distinct('name')->orderBy('name')->get();
-
+        $tags = Tag::withoutTagsMaterial($material);
         return view('material.show', compact('material', 'tags'));
     }
 
@@ -82,11 +75,11 @@ class MaterialController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Material $material
-     * @return Application|Factory|View
+     * @return View
      */
-    public function edit(Material $material): View|Factory|Application
+    public function edit(Material $material): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::sorted();
         return view('material.edit', compact('material', 'categories'));
     }
 
@@ -156,7 +149,7 @@ class MaterialController extends Controller
 
     public function deleteTagMaterial(Request $request): RedirectResponse
     {
-        TagMaterial::where([['tag_id', $request->tag],['material_id', $request->material]])->delete();
+        TagMaterial::searchForDelete($request)->delete();
         return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
