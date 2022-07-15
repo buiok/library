@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use App\Models\SearchMaterials;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -130,13 +131,7 @@ class MaterialController extends Controller
         }
 
         $search = $request->search;
-        $materials = Material::select('materials.*')->where('materials.name', 'LIKE', '%' . $search . '%')
-            ->orWhere('author', 'LIKE', '%' . $search . '%')
-            ->orWhere('categories.name', 'LIKE', '%' . $search . '%')
-            ->orWhere('tags.name', 'LIKE', '%' . $search . '%')
-            ->leftJoin('categories', 'category_id', '=', 'categories.id')
-            ->leftJoin('tag_material', 'materials.id', '=', 'tag_material.material_id')
-            ->leftJoin('tags', 'tag_id', '=', 'tags.id')->distinct()->get();
+        $materials = SearchMaterials::search($search);
 
         return view('material.search', compact('materials', 'search'));
     }
