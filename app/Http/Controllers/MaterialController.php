@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddLinkMaterial;
+use App\Http\Requests\AddTagMaterial;
+use App\Http\Requests\EditLinkMaterial;
+use App\Http\Requests\MaterialStore;
+use App\Http\Requests\SearchMaterial;
 use App\Models\Material;
 use App\Models\SearchMaterials;
 use Illuminate\Contracts\Foundation\Application;
@@ -42,20 +47,12 @@ class MaterialController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param MaterialStore $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(MaterialStore $request): RedirectResponse
     {
-        $rules = [
-            'name' => 'required|string',
-            'category_id' => 'required|integer|exists:categories,id',
-            'type' => 'required',
-        ];
-
-        $request->validate($rules);
         $material = Material::create($request->all());
-
         return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно добавлен');
     }
 
@@ -86,21 +83,13 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param MaterialStore $request
      * @param Material $material
      * @return RedirectResponse
      */
-    public function update(Request $request, Material $material): RedirectResponse
+    public function update(MaterialStore $request, Material $material): RedirectResponse
     {
-        $rules = [
-            'name' => 'required|string',
-            'category_id' => 'required|integer|exists:categories,id',
-            'type' => 'required',
-        ];
-
-        $request->validate($rules);
         $material->update($request->all());
-
         return redirect()->route('materials.show', $material->id)->with('success', 'Материал успешно изменен');
     }
 
@@ -116,29 +105,16 @@ class MaterialController extends Controller
         return redirect()->route('materials.index')->with('success', 'Материал удален');
     }
 
-    public function searchMaterial(Request $request): Factory|View|RedirectResponse|Application
+    public function searchMaterial(SearchMaterial $request): Factory|View|RedirectResponse|Application
     {
-        $validator = Validator:: make($request->all(), ['search' => 'required|string']);
-        if ($validator->fails()) {
-            return redirect()->route('materials.index')->withErrors($validator, 'form_search');
-        }
-
         $search = $request->search;
         $materials = SearchMaterials::search($search);
 
         return view('material.search', compact('materials', 'search'));
     }
 
-    public function addTagMaterial(Request $request): RedirectResponse
+    public function addTagMaterial(AddTagMaterial $request): RedirectResponse
     {
-        $validator = Validator:: make($request->all(), [
-           'tag' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_addTag');
-        }
-
         TagMaterial::create([
             'tag_id' => $request->tag,
             'material_id' => $request->material_id,
@@ -153,16 +129,8 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
-    public function addLinkMaterial(Request $request): RedirectResponse
+    public function addLinkMaterial(AddLinkMaterial $request): RedirectResponse
     {
-        $validator = Validator:: make($request->all(), [
-           'url' => 'required|url',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_addLink');
-        }
-
         Link::create([
             'material_id' => $request->material_id,
             'signature' => $request->signature,
@@ -172,16 +140,8 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material_id)->with('success', 'Ссылка добавлена');
     }
 
-    public function editLinkMaterial(Request $request): RedirectResponse
+    public function editLinkMaterial(EditLinkMaterial $request): RedirectResponse
     {
-        $validator = Validator:: make($request->all(), [
-           'url' => 'required|url',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('materials.show', $request->material_id)->withErrors($validator, 'form_editLink');
-        }
-
         $link = Link::find($request->link_id);
         $link->update([
             'material_id' => $request->material_id,

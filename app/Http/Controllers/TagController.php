@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TagStore;
 use App\Models\Tag;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -35,14 +36,12 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param TagStore $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(TagStore $request): RedirectResponse
     {
-        $request->validate(['name' => 'required|unique:tags,name']);
         Tag::create($request->all());
-
         return redirect()->route('tags.index')->with('success', 'Тег добавлен');
     }
 
@@ -72,15 +71,13 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param TagStore $request
      * @param Tag $tag
      * @return RedirectResponse
      */
-    public function update(Request $request, Tag $tag): RedirectResponse
+    public function update(TagStore $request, Tag $tag): RedirectResponse
     {
-        $request->validate(['name' => 'required|unique:tags,name']);
         $tag->update($request->all());
-
         return redirect()->route('tags.index')->with('success', 'Тег изменен');
     }
 

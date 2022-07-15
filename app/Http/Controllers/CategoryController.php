@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryStore;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -33,13 +34,11 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param CategoryStore $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(CategoryStore $request): RedirectResponse
     {
-        $request->validate(['name' => 'required|unique:categories,name']);
-
         Category::create($request->all());
         return redirect()->route('categories.index')->with('success', 'Категория добавлена');
     }
@@ -70,15 +69,13 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param CategoryStore $request
      * @param Category $category
      * @return RedirectResponse
      */
-    public function update(Request $request, Category $category): RedirectResponse
+    public function update(CategoryStore $request, Category $category): RedirectResponse
     {
-        $request->validate(['name' => 'required|unique:categories,name']);
         $category->update($request->all());
-
         return redirect()->route('categories.index')->with('success', 'Категория изменена');
     }
 
