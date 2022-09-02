@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddLinkMaterial;
 use App\Http\Requests\AddTagMaterial;
 use App\Http\Requests\EditLinkMaterial;
 use App\Http\Requests\MaterialStore;
@@ -14,11 +13,11 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Tag;
 use App\Models\Link;
 use App\Models\Category;
 use App\Models\TagMaterial;
+use Illuminate\Support\Facades\Validator;
 
 class MaterialController extends Controller
 {
@@ -129,8 +128,12 @@ class MaterialController extends Controller
         return redirect()->route('materials.show', $request->material)->with('success', 'Тег удален');
     }
 
-    public function addLinkMaterial(AddLinkMaterial $request): RedirectResponse
+    public function addLinkMaterial(Request $request): RedirectResponse
     {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required|url',
+        ])->validateWithBag('form_addLink');
+
         Link::create([
             'material_id' => $request->material_id,
             'signature' => $request->signature,
