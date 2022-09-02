@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('tag_material', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tag_id')->constrained();
-            $table->foreignId('material_id')->constrained();
+            $table->foreignId('tag_id')->constrained()->ondelete('cascade');
+            $table->foreignId('material_id')->constrained()->ondelete('cascade');
             $table->timestamps();
         });
     }
