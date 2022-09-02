@@ -21,7 +21,7 @@
                 <div class="modal-body">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" placeholder="Добавьте подпись"
-                               id="floatingModalSignature" name="signature">
+                               id="floatingModalSignature" name="signature" value="{{ old('signature') }}">
                         <label for="floatingModalSignature">Подпись</label>
                         <div class="invalid-feedback">
                             Пожалуйста, заполните поле
@@ -29,7 +29,7 @@
 
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="url" class="form-control" placeholder="Добавьте ссылку" id="floatingModalLink" name="url" required>
+                        <input type="url" class="form-control" placeholder="Добавьте ссылку" id="floatingModalLink" name="url" required value="{{ old('url') }}">
                         <label for="floatingModalLink">Ссылка</label>
                         <div class="invalid-feedback">
                             Пожалуйста, заполните поле
