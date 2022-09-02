@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    
+
 
     <link rel="stylesheet" href="{{url('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url('css/bootstrap-utilities.css')}}">
@@ -46,6 +46,14 @@
         crossorigin="anonymous"></script>
 
 <script>
+    let params = new URLSearchParams(window.location.search);
+    if (document.getElementById('floatingModalSignature').value) {
+        window.addEventListener('load', function () {
+            let myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'));
+            myModal.show();
+        });
+    }
+
     if (document.getElementById('exampleModalToggleEdit')) {
         const exampleModal = document.getElementById('exampleModalToggleEdit');
         exampleModal.addEventListener('show.bs.modal', event => {
@@ -66,7 +74,7 @@
             modalURL.value = url;
 
             m_id.value = material_id;
-            l_id.value = link_id; 
+            l_id.value = link_id;
         })
     }
 </script>
