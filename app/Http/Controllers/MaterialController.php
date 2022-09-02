@@ -158,6 +158,6 @@ class MaterialController extends Controller
     public function deleteLinkMaterial(Request $request): RedirectResponse
     {
         Link::where('id', $request->link)->delete();
-        return redirect()->route('materials.index')->with('success', 'Ссылка удалена');
+        return redirect()->route('materials.show', $request->material)->with('success', 'Ссылка удалена');
     }
 }
